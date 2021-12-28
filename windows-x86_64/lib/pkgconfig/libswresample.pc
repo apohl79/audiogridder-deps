@@ -1,0 +1,14 @@
+prefix=C:/audiogridder-deps/windows-x86_64
+exec_prefix=${prefix}
+libdir=C:/audiogridder-deps/windows-x86_64/lib
+includedir=C:/audiogridder-deps/windows-x86_64/include
+
+Name: libswresample
+Description: FFmpeg audio resampling library
+Version: 4.0.100
+Requires: libavutil >= 57.11.101
+Requires.private: 
+Conflicts:
+Libs: -L${libdir}  -lswresample 
+Libs.private: 
+Cflags: -I${includedir}

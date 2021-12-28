@@ -1,0 +1,14 @@
+prefix=C:/audiogridder-deps/windows-x86_64
+exec_prefix=${prefix}
+libdir=C:/audiogridder-deps/windows-x86_64/lib
+includedir=C:/audiogridder-deps/windows-x86_64/include
+
+Name: libavcodec
+Description: FFmpeg codec library
+Version: 59.14.100
+Requires: libavutil >= 57.11.101
+Requires.private: 
+Conflicts:
+Libs: -L${libdir}  -lavcodec -libpath:/z/libwebp-win/libwebp-1.1.0-windows-x64/lib libwebp.lib ole32.lib user32.lib
+Libs.private: 
+Cflags: -I${includedir}
