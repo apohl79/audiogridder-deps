@@ -1,0 +1,14 @@
+prefix=/root/audiogridder-deps/linux-x86_64
+exec_prefix=${prefix}
+libdir=/root/audiogridder-deps/linux-x86_64/lib
+includedir=/root/audiogridder-deps/linux-x86_64/include
+
+Name: libswresample
+Description: FFmpeg audio resampling library
+Version: 4.0.100
+Requires: libavutil >= 57.11.101
+Requires.private: 
+Conflicts:
+Libs: -L${libdir}  -lswresample -lm
+Libs.private: 
+Cflags: -I${includedir}

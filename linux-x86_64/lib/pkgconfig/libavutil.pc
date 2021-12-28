@@ -1,0 +1,14 @@
+prefix=/root/audiogridder-deps/linux-x86_64
+exec_prefix=${prefix}
+libdir=/root/audiogridder-deps/linux-x86_64/lib
+includedir=/root/audiogridder-deps/linux-x86_64/include
+
+Name: libavutil
+Description: FFmpeg utility library
+Version: 57.11.101
+Requires: 
+Requires.private: 
+Conflicts:
+Libs: -L${libdir}  -lavutil -pthread -lm
+Libs.private: 
+Cflags: -I${includedir}
