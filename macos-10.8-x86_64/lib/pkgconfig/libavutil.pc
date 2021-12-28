@@ -1,0 +1,14 @@
+prefix=/Users/apohl/audio/audiogridder-deps/macos-10.8-x86_64
+exec_prefix=${prefix}
+libdir=/Users/apohl/audio/audiogridder-deps/macos-10.8-x86_64/lib
+includedir=/Users/apohl/audio/audiogridder-deps/macos-10.8-x86_64/include
+
+Name: libavutil
+Description: FFmpeg utility library
+Version: 57.11.101
+Requires: 
+Requires.private: 
+Conflicts:
+Libs: -L${libdir}  -lavutil -pthread -lm -framework VideoToolbox -framework CoreFoundation -framework CoreMedia -framework CoreVideo -framework CoreServices
+Libs.private: 
+Cflags: -I${includedir}

@@ -1,0 +1,14 @@
+prefix=/Users/apohl/audio/audiogridder-deps/macos-11.1-arm64
+exec_prefix=${prefix}
+libdir=/Users/apohl/audio/audiogridder-deps/macos-11.1-arm64/lib
+includedir=/Users/apohl/audio/audiogridder-deps/macos-11.1-arm64/include
+
+Name: libavformat
+Description: FFmpeg container format library
+Version: 59.10.100
+Requires: libavcodec >= 59.14.100, libavutil >= 57.11.101
+Requires.private: 
+Conflicts:
+Libs: -L${libdir}  -lavformat -lm
+Libs.private: 
+Cflags: -I${includedir}
