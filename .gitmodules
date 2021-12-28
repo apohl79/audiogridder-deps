@@ -1,0 +1,12 @@
+[submodule "repos/FFmpeg"]
+	path = repos/FFmpeg
+	url = https://github.com/apohl79/FFmpeg.git
+[submodule "repos/libwebp"]
+	path = repos/libwebp
+	url = https://github.com/webmproject/libwebp.git
+[submodule "repos/sentry-native"]
+	path = repos/sentry-native
+	url = https://github.com/getsentry/sentry-native.git
+[submodule "repos/boost"]
+	path = repos/boost
+	url = https://github.com/boostorg/boost.git
