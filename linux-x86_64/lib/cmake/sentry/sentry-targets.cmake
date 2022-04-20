@@ -56,7 +56,7 @@ add_library(sentry::sentry STATIC IMPORTED)
 set_target_properties(sentry::sentry PROPERTIES
   INTERFACE_COMPILE_DEFINITIONS "SENTRY_BUILD_STATIC"
   INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
-  INTERFACE_LINK_LIBRARIES "\$<LINK_ONLY:CURL::libcurl>;\$<\$<OR:\$<PLATFORM_ID:Linux>,\$<PLATFORM_ID:Android>>:-Wl,-E,--build-id=sha1>;\$<LINK_ONLY:dl>;\$<LINK_ONLY:rt>;\$<LINK_ONLY:Threads::Threads>;\$<LINK_ONLY:>;\$<LINK_ONLY:sentry_crashpad::client>"
+  INTERFACE_LINK_LIBRARIES "\$<LINK_ONLY:CURL::libcurl>;\$<\$<OR:\$<PLATFORM_ID:Linux>,\$<PLATFORM_ID:Android>>:-Wl,-E,--build-id=sha1>;dl;rt;Threads::Threads;\$<LINK_ONLY:>;\$<LINK_ONLY:sentry_crashpad::client>"
 )
 
 if(CMAKE_VERSION VERSION_LESS 2.8.12)

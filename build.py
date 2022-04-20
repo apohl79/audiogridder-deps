@@ -48,8 +48,8 @@ def getMacToolchain(args):
         toolchain = '/Library/Developer/10/CommandLineTools'
         sysroot = toolchain + '/SDKs/MacOSX10.14.sdk'
     elif args.macostarget == '11.1':
-        toolchain = '/Library/Developer/CommandLineTools'
-        sysroot = toolchain + '/SDKs/MacOSX11.3.sdk'
+        toolchain = '/Library/Developer/13/CommandLineTools'
+        sysroot = toolchain + '/SDKs/MacOSX11.sdk'
     return (toolchain, sysroot)
 
 def setMacToolchain(args):
