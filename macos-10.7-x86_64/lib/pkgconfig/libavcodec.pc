@@ -9,6 +9,6 @@ Version: 59.14.100
 Requires: libavutil >= 57.11.101
 Requires.private: 
 Conflicts:
-Libs: -L${libdir}  -lavcodec -pthread -lm -L/usr/local/Cellar/webp/1.2.1/lib -lwebp
+Libs: -L${libdir}  -lavcodec -pthread -lm -L/usr/local/Cellar/webp/1.2.1_1/lib -lwebp
 Libs.private: 
 Cflags: -I${includedir}

@@ -1,7 +1,7 @@
-prefix=C:/audiogridder-deps/windows-x86_64
+prefix=/z/audio/audiogridder-deps/windows-x86_64
 exec_prefix=${prefix}
-libdir=C:/audiogridder-deps/windows-x86_64/lib
-includedir=C:/audiogridder-deps/windows-x86_64/include
+libdir=/z/audio/audiogridder-deps/windows-x86_64/lib
+includedir=/z/audio/audiogridder-deps/windows-x86_64/include
 
 Name: libavformat
 Description: FFmpeg container format library

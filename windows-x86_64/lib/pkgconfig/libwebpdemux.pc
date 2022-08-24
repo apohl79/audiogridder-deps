@@ -1,4 +1,4 @@
-prefix=C:/Program Files (x86)/WebP
+prefix=Z:\audio\audiogridder-deps/windows-x86_64
 exec_prefix=${prefix}
 libdir=${prefix}/lib
 includedir=${prefix}/include
