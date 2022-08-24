@@ -20,8 +20,9 @@ def getPlatform(args=None):
         return 'macos'
     elif sys.platform in ('linux', 'linux2'):
         return 'linux'
-    elif sys.platform == 'win32':
+    elif sys.platform in ('win32', 'cygwin'):
         return 'windows'
+    return ''
 
 def getPlatformArch(args):
     if getPlatform(args) == 'macos':
@@ -41,13 +42,13 @@ def isCrossCompilation(args):
 def getMacToolchain(args):
     toolchain = ''
     sysroot = ''
-    if args.macostarget == '10.7':
+    if 'macostarget' in vars(args) and args.macostarget == '10.7':
         toolchain = '/Library/Developer/10/CommandLineTools'
         sysroot = toolchain + '/SDKs/MacOSX10.14.sdk'
-    elif args.macostarget == '10.8':
+    elif 'macostarget' in vars(args) and args.macostarget == '10.8':
         toolchain = '/Library/Developer/10/CommandLineTools'
         sysroot = toolchain + '/SDKs/MacOSX10.14.sdk'
-    elif args.macostarget == '11.1':
+    elif 'macostarget' in vars(args) and args.macostarget == '11.1':
         toolchain = '/Library/Developer/13/CommandLineTools'
         sysroot = toolchain + '/SDKs/MacOSX11.sdk'
     return (toolchain, sysroot)
@@ -55,7 +56,7 @@ def getMacToolchain(args):
 def setMacToolchain(args):
     (newToolchain, sysroot) = getMacToolchain(args)
     lastToolchain = executeReadOutput('xcode-select -p')
-    if newToolchain != lastToolchain:
+    if newToolchain != lastToolchain and newToolchain != '':
         print('required toolchain not selected, trying xcode-select')
         execute('sudo xcode-select -s ' + newToolchain)
     return (newToolchain, lastToolchain, sysroot)
@@ -122,6 +123,18 @@ def buildLibwebp(args):
     shutil.rmtree('build')
     if platform == 'windows':
         os.remove('user.cmake')
+        # fixing pkgconfig files
+        for pc in ('libwebp.pc', 'libwebpdecoder.pc', 'libwebpdemux.pc', 'libwebpmux.pc'):
+            lines = None
+            with open(instDir + '/lib/pkgconfig/' + pc, 'r') as f:
+                lines = f.readlines()
+            with open(instDir + '/lib/pkgconfig/' + pc, 'w') as f:
+                for l in lines:
+                    if l.startswith('prefix'):
+                        f.write('prefix=' + instDir + '\n')
+                    else:
+                        f.write(l);
+
 
     os.chdir('../..')
 
@@ -140,7 +153,7 @@ def buildFFmpeg(args):
     conf_params.append('--enable-static')
     conf_params.append('--enable-libwebp')
     conf_params.append('--disable-shared')
-    conf_params.append('--disable-debug')
+    #conf_params.append('--disable-debug')
     conf_params.append('--disable-programs')
     conf_params.append('--disable-sdl2')
     conf_params.append('--disable-securetransport')
@@ -166,6 +179,7 @@ def buildFFmpeg(args):
         conf_params.append('--enable-w32threads')
         conf_params.append('--extra-cflags="-I{}/include"'.format(instDir))
         conf_params.append('--extra-ldflags="-L{}/lib"'.format(instDir))
+        os.environ['PKG_CONFIG_PATH'] = instDir + '/lib/pkgconfig'
     elif platform == 'macos':
         conf_params.append('--disable-libxcb')
         if isCrossCompilation(args):
@@ -412,7 +426,7 @@ def main():
     lastToolchain = ''
 
     if getPlatform() == 'macos':
-        if args.arch == 'arm64':
+        if 'arch' in vars(args) and args.arch == 'arm64':
             args.macostarget = '11.1'
         (newToolchain, lastToolchain, sysroot) = setMacToolchain(args)
 
