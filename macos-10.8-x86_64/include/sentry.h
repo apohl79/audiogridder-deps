@@ -30,7 +30,7 @@ extern "C" {
 #        define SENTRY_SDK_NAME "sentry.native"
 #    endif
 #endif
-#define SENTRY_SDK_VERSION "0.5.0"
+#define SENTRY_SDK_VERSION "0.6.0"
 #define SENTRY_SDK_USER_AGENT SENTRY_SDK_NAME "/" SENTRY_SDK_VERSION
 
 /* common platform detection */
@@ -787,6 +787,11 @@ SENTRY_API void sentry_options_set_transport(
  * event, following the cross-SDK session filter order:
  *
  * https://develop.sentry.dev/sdk/sessions/#filter-order
+ *
+ * On Windows the crashpad backend can capture fast-fail crashes which by-pass
+ * SEH. Since the `before_send` is called by a local exception-handler, it will
+ * not be invoked when such a crash happened, even though a minidump will be
+ * sent.
  */
 typedef sentry_value_t (*sentry_event_function_t)(
     sentry_value_t event, void *hint, void *closure);
@@ -841,6 +846,10 @@ SENTRY_API void sentry_options_set_before_send(
  *
  *  - does not work with crashpad on macOS.
  *  - for breakpad on Linux the `uctx` parameter is always NULL.
+ *  - on Windows the crashpad backend can capture fast-fail crashes which
+ * by-pass SEH. Since `on_crash` is called by a local exception-handler, it will
+ * not be invoked when such a crash happened, even though a minidump will be
+ * sent.
  */
 typedef sentry_value_t (*sentry_crash_function_t)(
     const sentry_ucontext_t *uctx, sentry_value_t event, void *closure);
@@ -1338,16 +1347,6 @@ SENTRY_API void sentry_set_transaction(const char *transaction);
 SENTRY_API void sentry_set_level(sentry_level_t level);
 
 /**
- * Starts a new session.
- */
-SENTRY_API void sentry_start_session(void);
-
-/**
- * Ends a session.
- */
-SENTRY_API void sentry_end_session(void);
-
-/**
  * Sets the maximum number of spans that can be attached to a
  * transaction.
  */
@@ -1374,6 +1373,31 @@ SENTRY_EXPERIMENTAL_API void sentry_options_set_traces_sample_rate(
  */
 SENTRY_EXPERIMENTAL_API double sentry_options_get_traces_sample_rate(
     sentry_options_t *opts);
+
+/* -- Session APIs -- */
+
+typedef enum {
+    SENTRY_SESSION_STATUS_OK,
+    SENTRY_SESSION_STATUS_CRASHED,
+    SENTRY_SESSION_STATUS_ABNORMAL,
+    SENTRY_SESSION_STATUS_EXITED,
+} sentry_session_status_t;
+
+/**
+ * Starts a new session.
+ */
+SENTRY_API void sentry_start_session(void);
+
+/**
+ * Ends a session.
+ */
+SENTRY_API void sentry_end_session(void);
+
+/**
+ * Ends a session with an explicit `status` code.
+ */
+SENTRY_EXPERIMENTAL_API void sentry_end_session_with_status(
+    sentry_session_status_t status);
 
 /* -- Performance Monitoring/Tracing APIs -- */
 
@@ -1837,7 +1861,7 @@ SENTRY_EXPERIMENTAL_API void sentry_transaction_iter_headers(
  *   0 = no crash recognized
  *  -1 = sentry_init() hasn't been called yet
  */
-SENTRY_EXPERIMENTAL_API int sentry_get_crashed_last_run();
+SENTRY_EXPERIMENTAL_API int sentry_get_crashed_last_run(void);
 
 /**
  * Clear the status of the "crashed-last-run". You should explicitly call
@@ -1851,22 +1875,22 @@ SENTRY_EXPERIMENTAL_API int sentry_get_crashed_last_run();
  *
  * Returns 0 on success, 1 on error.
  */
-SENTRY_EXPERIMENTAL_API int sentry_clear_crashed_last_run();
+SENTRY_EXPERIMENTAL_API int sentry_clear_crashed_last_run(void);
 
 /**
  * Sentry SDK version.
  */
-SENTRY_EXPERIMENTAL_API const char *sentry_sdk_version();
+SENTRY_EXPERIMENTAL_API const char *sentry_sdk_version(void);
 
 /**
  * Sentry SDK name.
  */
-SENTRY_EXPERIMENTAL_API const char *sentry_sdk_name();
+SENTRY_EXPERIMENTAL_API const char *sentry_sdk_name(void);
 
 /**
  * Sentry SDK User-Agent.
  */
-SENTRY_EXPERIMENTAL_API const char *sentry_sdk_user_agent();
+SENTRY_EXPERIMENTAL_API const char *sentry_sdk_user_agent(void);
 
 #ifdef __cplusplus
 }
