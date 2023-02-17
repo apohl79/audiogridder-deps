@@ -42,15 +42,12 @@ def isCrossCompilation(args):
 def getMacToolchain(args):
     toolchain = ''
     sysroot = ''
-    if 'macostarget' in vars(args) and args.macostarget == '10.7':
-        toolchain = '/Library/Developer/10/CommandLineTools'
-        sysroot = toolchain + '/SDKs/MacOSX10.14.sdk'
-    elif 'macostarget' in vars(args) and args.macostarget == '10.8':
+    if 'macostarget' in vars(args) and args.macostarget in ('10.7', '10.8', '10.9'):
         toolchain = '/Library/Developer/10/CommandLineTools'
         sysroot = toolchain + '/SDKs/MacOSX10.14.sdk'
     elif 'macostarget' in vars(args) and args.macostarget == '11.1':
         toolchain = '/Library/Developer/13/CommandLineTools'
-        sysroot = toolchain + '/SDKs/MacOSX11.sdk'
+        sysroot = toolchain + '/SDKs/MacOSX11.1.sdk'
     return (toolchain, sysroot)
 
 def setMacToolchain(args):
@@ -106,6 +103,8 @@ def buildLibwebp(args):
         (newToolchain, lastToolchain, sysroot) = setMacToolchain(args)
         if newToolchain != lastToolchain:
             post_commands.append('sudo xcode-select -s ' + lastToolchain)
+
+        cmake_conf_params.append('-DCMAKE_OSX_SYSROOT=' + sysroot)
 
     elif platform == 'linux':
         cmake_conf_params.append('-DCMAKE_BUILD_TYPE=Release')
@@ -263,6 +262,8 @@ def buildSentry(args):
         if newToolchain != lastToolchain:
             post_commands.append('sudo xcode-select -s ' + lastToolchain)
 
+        cmake_conf_params.append('-DCMAKE_OSX_SYSROOT=' + sysroot)
+
     cmake_conf_params.append('-DSENTRY_BUILD_SHARED_LIBS=OFF')
     cmake_conf_params.append('-DSENTRY_BACKEND=crashpad')
     cmake_conf_params.append('-DSENTRY_BUILD_TESTS=OFF')
@@ -277,6 +278,7 @@ def buildSentry(args):
     execute('cmake ' + ' '.join(cmake_conf_params))
     execute('cmake ' + ' '.join(cmake_build_params))
     execute('cmake ' + ' '.join(cmake_inst_params))
+
     shutil.rmtree('build')
 
     os.chdir('..')
@@ -424,6 +426,7 @@ def main():
 
     newToolchain = ''
     lastToolchain = ''
+    sysroot = ''
 
     if getPlatform() == 'macos':
         if 'arch' in vars(args) and args.arch == 'arm64':
