@@ -167,7 +167,7 @@ def buildFFmpeg(args):
     conf_params.append('--enable-decoder=webp,rawvideo')
     conf_params.append('--enable-parser=mjpeg,webp')
     conf_params.append('--enable-muxer=mjpeg,webp')
-    conf_params.append('--enable-indev=avfoundation,gdigrab')
+    conf_params.append('--enable-indev=avfoundation,gdigrab,x11grab,xcbgrab')
 
     if platform == 'windows':
         if os.environ.get('MSYSTEM') != 'MSYS':
@@ -199,6 +199,10 @@ def buildFFmpeg(args):
         conf_params.append('--enable-pic')
         conf_params.append('--disable-asm')
         conf_params.append('--extra-cflags="-I{}/include"'.format(instDir))
+        conf_params.append('--enable-libxcb')
+        conf_params.append('--enable-libxcb-shm')
+        conf_params.append('--enable-libxcb-xfixes')
+        conf_params.append('--enable-libxcb-shape')
 
     build_params = []
     if args.jobs > 0:
