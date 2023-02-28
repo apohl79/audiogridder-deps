@@ -120,8 +120,9 @@ def buildLibwebp(args):
     execute('cmake ' + ' '.join(cmake_inst_params))
 
     shutil.rmtree('build')
-    if platform == 'windows':
-        os.remove('user.cmake')
+    if platform in ('windows', 'linux'):
+        if platform == 'windows':
+            os.remove('user.cmake')
         # fixing pkgconfig files
         for pc in ('libwebp.pc', 'libwebpdecoder.pc', 'libwebpdemux.pc', 'libwebpmux.pc'):
             lines = None
@@ -133,7 +134,6 @@ def buildLibwebp(args):
                         f.write('prefix=' + instDir + '\n')
                     else:
                         f.write(l);
-
 
     os.chdir('../..')
 
@@ -199,10 +199,13 @@ def buildFFmpeg(args):
         conf_params.append('--enable-pic')
         conf_params.append('--disable-asm')
         conf_params.append('--extra-cflags="-I{}/include"'.format(instDir))
+        conf_params.append('--extra-ldflags="-L{}/lib"'.format(instDir))
+        conf_params.append('--extra-libs="-Wl,--start-group -lm -lpthread -Wl,--end-group"')
         conf_params.append('--enable-libxcb')
         conf_params.append('--enable-libxcb-shm')
         conf_params.append('--enable-libxcb-xfixes')
         conf_params.append('--enable-libxcb-shape')
+        os.environ['PKG_CONFIG_PATH'] = instDir + '/lib/pkgconfig'
 
     build_params = []
     if args.jobs > 0:
