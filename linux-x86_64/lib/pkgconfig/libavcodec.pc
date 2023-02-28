@@ -1,7 +1,7 @@
-prefix=/root/audiogridder-deps/linux-x86_64
+prefix=/media/psf/Home/audio/audiogridder-deps/linux-x86_64
 exec_prefix=${prefix}
-libdir=/root/audiogridder-deps/linux-x86_64/lib
-includedir=/root/audiogridder-deps/linux-x86_64/include
+libdir=/media/psf/Home/audio/audiogridder-deps/linux-x86_64/lib
+includedir=/media/psf/Home/audio/audiogridder-deps/linux-x86_64/include
 
 Name: libavcodec
 Description: FFmpeg codec library
@@ -9,6 +9,6 @@ Version: 59.14.100
 Requires: libavutil >= 57.11.101
 Requires.private: 
 Conflicts:
-Libs: -L${libdir}  -lavcodec -pthread -lm -L/usr/local/lib -lwebp
+Libs: -L${libdir}  -lavcodec -pthread -lm -L/media/psf/Home/audio/audiogridder-deps/linux-x86_64/lib -lwebp
 Libs.private: 
 Cflags: -I${includedir}

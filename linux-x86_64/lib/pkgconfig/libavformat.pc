@@ -1,7 +1,7 @@
-prefix=/root/audiogridder-deps/linux-x86_64
+prefix=/media/psf/Home/audio/audiogridder-deps/linux-x86_64
 exec_prefix=${prefix}
-libdir=/root/audiogridder-deps/linux-x86_64/lib
-includedir=/root/audiogridder-deps/linux-x86_64/include
+libdir=/media/psf/Home/audio/audiogridder-deps/linux-x86_64/lib
+includedir=/media/psf/Home/audio/audiogridder-deps/linux-x86_64/include
 
 Name: libavformat
 Description: FFmpeg container format library
